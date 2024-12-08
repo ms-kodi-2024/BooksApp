@@ -17,17 +17,12 @@ class BooksList {
   constructor() {
     const thisBooksList = this;
     thisBooksList.data = dataSource.books;
-    thisBooksList.getElements();
     thisBooksList.render();
-  }
-
-  getElements() {
-    const thisBooksList = this;
-    thisBooksList.booksList = document.querySelector(select.containerOf.booksList);
   }
 
   render() {
     const thisBooksList = this;
+    thisBooksList.booksList = document.querySelector(select.containerOf.booksList);
     for (const book of thisBooksList.data) {
       const generatedHTML = templates.bookTemplate(book);
       const element = utils.createDOMFromHTML(generatedHTML);
@@ -36,5 +31,10 @@ class BooksList {
   }
 }
 
-const app = new BooksList();
-app;
+const app = {
+  init: function () {
+    new BooksList();
+  }
+};
+
+app.init();
