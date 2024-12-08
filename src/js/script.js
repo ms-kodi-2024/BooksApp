@@ -43,21 +43,21 @@ class BooksList {
   
   initActions(favoritesBooks) {
     const thisBooksList = this;
-    thisBooksList.booksImages = thisBooksList.booksList.querySelectorAll(select.imageOf.bookImage);
-    for (const bookImage of thisBooksList.booksImages) {
-      bookImage.addEventListener('dblclick', function (event) {
-        event.preventDefault();
-        const dataId = bookImage.getAttribute('data-id');
+    thisBooksList.booksList.addEventListener('dblclick', function (event) {
+      event.preventDefault();
+      const clickedElement = event.target.offsetParent;
+      if (clickedElement && clickedElement.classList.contains('book__image')) {
+        const dataId = clickedElement.getAttribute('data-id');
         if (!favoritesBooks.includes(dataId)) {
           favoritesBooks.push(dataId);
-          bookImage.classList.add(classNames.book.favorite);
+          clickedElement.classList.add(classNames.book.favorite);
         } else {
           const indexBook = favoritesBooks.indexOf(dataId);
           favoritesBooks.splice(indexBook, 1);
-          bookImage.classList.remove(classNames.book.favorite);
+          clickedElement.classList.remove(classNames.book.favorite);
         }
-      });
-    }
+      }
+    });
   }
 }
 
