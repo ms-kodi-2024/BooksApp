@@ -7,6 +7,15 @@ const select = {
   containerOf: {
     booksList: '.books-list',
   },
+  imageOf: {
+    bookImage: '.book__image',
+  },
+};
+
+const classNames = {
+  book: {
+    favorite: 'favorite',
+  },
 };
 
 const templates = {
@@ -17,7 +26,9 @@ class BooksList {
   constructor() {
     const thisBooksList = this;
     thisBooksList.data = dataSource.books;
+    const favoritesBooks = [];
     thisBooksList.render();
+    thisBooksList.initActions(favoritesBooks);
   }
 
   render() {
@@ -27,6 +38,19 @@ class BooksList {
       const generatedHTML = templates.bookTemplate(book);
       const element = utils.createDOMFromHTML(generatedHTML);
       thisBooksList.booksList.appendChild(element);
+    }
+  }
+  
+  initActions(favoritesBooks) {
+    const thisBooksList = this;
+    thisBooksList.booksImages = thisBooksList.booksList.querySelectorAll(select.imageOf.bookImage);
+    for (const bookImage of thisBooksList.booksImages) {
+      bookImage.addEventListener('dblclick', function (event) {
+        event.preventDefault();
+        bookImage.classList.add(classNames.book.favorite);      
+        const dataId = bookImage.getAttribute('data-id');
+        favoritesBooks.push(dataId);
+      });
     }
   }
 }
