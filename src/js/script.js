@@ -36,10 +36,34 @@ class BooksList {
     thisBooksList.initActions(favoritesBooks, filters);
   }
 
+  determineRatingBgc(rating) {
+    const colors = {
+      lightYellow: '#fefcea',
+      yellow: '#f1da36',
+      lightGreen: '#b4df5b',
+      green: '#299a0b',
+      pink: '#ff0084',
+      defaultGrey: '#eeeeee',
+    };
+    let ratingStyle = `linear-gradient(to bottom, ${colors.defaultGrey} 0%, ${colors.defaultGrey} 100%);`;
+    if (rating <= 6) {
+      ratingStyle = `linear-gradient(to bottom, ${colors.lightYellow} 0%, ${colors.yellow} 100%);`;
+    } else if (rating <= 8) {
+      ratingStyle = `linear-gradient(to bottom, ${colors.lightGreen} 0%, ${colors.lightGreen} 100%);`;
+    } else if (rating <= 9) {
+      ratingStyle = `linear-gradient(to bottom, ${colors.green} 0%, ${colors.green} 100%);`;
+    } else {
+      ratingStyle = `linear-gradient(to bottom, ${colors.pink} 0%, ${colors.pink} 100%);`;
+    }
+    return ratingStyle;
+  }
+
   render() {
     const thisBooksList = this;
     thisBooksList.booksList = document.querySelector(select.containerOf.booksList);
     for (const book of thisBooksList.data) {
+      book.ratingBgc = thisBooksList.determineRatingBgc(book.rating);
+      book.ratingWidth = book.rating * 10;
       const generatedHTML = templates.bookTemplate(book);
       const element = utils.createDOMFromHTML(generatedHTML);
       thisBooksList.booksList.appendChild(element);
@@ -50,14 +74,14 @@ class BooksList {
     const thisBooksList = this;
     for (const book of thisBooksList.data) {
       const hiddenBook = document.querySelector(`.book__image[data-id="${book.id}"]`);
-      let shouldBeHidden = false;      
+      let shouldBeHidden = false;
       for (const filter of filters) {
-        if (!book.details[filter]) {          
+        if (!book.details[filter]) {
           shouldBeHidden = true;
           break;
         }
       }
-      if(shouldBeHidden) {
+      if (shouldBeHidden) {
         hiddenBook.classList.add(classNames.book.hidden);
       } else {
         hiddenBook.classList.remove(classNames.book.hidden);
@@ -91,11 +115,12 @@ class BooksList {
         } else {
           const indexFilter = filters.indexOf(clickedElement.getAttribute(select.imageOf.value));
           filters.splice(indexFilter, 1);
-        }        
+        }
         thisBooksList.filterBook(filters);
       }
     });
   }
+
 }
 
 const app = {
